@@ -46,7 +46,7 @@
             cidr_ip: 184.190.96.180/32
         state: present
 
-    - name: Create Instance specific Security Groups
+    - name: Create Instance specific Security Groups #Create security groups for all the services
       amazon.aws.ec2_security_group:
         name: "roboshop-{{ item.name }}"
         description: "SG for {{ item.name }}"
@@ -62,7 +62,7 @@
         label: "{{ item.name }}"
       when: action == "create"
     
-    - name: Create EC2 Instances
+    - name: Create EC2 Instances # Create EC2 instances for all the services
       amazon.aws.ec2_instance:
         name: "roboshop-{{ item.name }}"
         state: running
