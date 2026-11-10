@@ -1,0 +1,27 @@
+---
+- name: Check the service running or not
+  hosts: local
+  connection: local
+
+  vars_prompt:
+    - name: service_name
+      prompt: "Please enter the service name to check:"
+      private: no
+  
+  tasks:
+    - name: Check if the service is running
+      shell: systemctl is-active {{ service_name }}
+      register: service_status
+      ignore_errors: yes
+
+    - name: Service Running
+      debug:
+        msg: "The service {{ service_name }} is running."
+
+      when: service_status.stdout == "active"
+
+    - name: Service Not Running
+      debug:
+        msg: "The service {{ service_name }} is not running."
+
+      when: service_status.stdout != "active"

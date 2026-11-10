@@ -1,0 +1,25 @@
+---
+- name: Loop Package Manager
+  hosts: local
+  connection: local
+
+  vars:
+    package_list:
+      - {name: "htop", state: "absent"}
+      - {name: "nginx", state: "absent"}
+      - {name: "nginx-common", state: "absent"}
+      - {name: "nginx-core", state: "absent"}
+      - {name: "libnginx-mod-http-geoip2", state: "absent"}
+      - {name: "libnginx-mod-http-image-filter", state: "absent"}
+      - {name: "libnginx-mod-http-xslt-filter", state: "absent"}
+      - {name: "libnginx-mod-mail", state: "absent"}
+      - {name: "libnginx-mod-stream", state: "absent"}
+      - {name: "libnginx-mod-stream-geoip2", state: "absent"}
+  tasks:
+    - name: Package manager loop
+      package:
+        name: "{{ item.name }}"
+        state: "{{ item.state }}"
+        purge: true
+        autoremove: true
+      loop: "{{ package_list }}"

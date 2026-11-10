@@ -1,0 +1,123 @@
+---
+- name: Create EC2 instance for roboshop project
+  hosts: local
+  connection: local
+  gather_facts: false
+
+  vars:
+    aws_region: us-east-1
+    ami_id: ami-0055977a6e828a4f4
+    domain_name: mahender.org
+    instance_type: t3.micro
+    instances:
+      - name: mongodb
+        port: 27017
+      - name: redis
+        port: 6379
+      - name: mysql
+        port: 3306
+      - name: rabbitmq
+        port: 5672
+      - name: catalogue
+        port: 8080
+      - name: user
+        port: 8080
+      - name: cart
+        port: 8080
+      - name: shipping
+        port: 8080
+      - name: payment
+        port: 8080
+      - name: frontend
+        port: 80
+      - name: dispatch
+        port: 0
+
+  tasks:
+    - name: Create Common Security Group
+      amazon.aws.ec2_security_group:
+        name: roboshop_common
+        description: "Common SG for RoboShop"
+        region: "{{ aws_region }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 184.190.96.180/32
+        state: present
+
+    - name: Create Instance specific Security Groups
+      amazon.aws.ec2_security_group:
+        name: "roboshop-{{ item.name }}"
+        description: "SG for {{ item.name }}"
+        region: "{{ aws_region }}"
+        rules:
+          - proto: tcp
+            ports:
+              - "{{ item.port | int }}"
+            cidr_ip: 0.0.0.0/0
+        state: present
+      loop: "{{ instances }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: action == "create"
+    
+    - name: Create EC2 Instances
+      amazon.aws.ec2_instance:
+        name: "roboshop-{{ item.name }}"
+        state: running
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ ami_id }}"
+        region: "{{ aws_region }}"
+        security_groups:
+          - roboshop_common
+          - "roboshop-{{ item.name }}"
+        wait: true
+      loop: "{{ instances }}"
+      when: action == "create"
+      register: ec2_output
+
+    - name: Add Route53 Record for EC2 Instances
+      amazon.aws.route53:
+        state: present
+        zone: "{{ domain_name }}"
+        record: "{{ item.item.name }}.{{ domain_name }}"
+        type: A
+        ttl: 1
+        value: "{{ item.instances[0].private_ip_address | string | trim }}"
+        overwrite: true
+      loop: "{{ ec2_output.results }}"
+      when: action == "create"
+
+    - name: Delete R53 Record
+      amazon.aws.route53:
+        state: absent
+        zone: "{{ domain_name }}"
+        record: "{{ item.name }}.{{ domain_name }}"
+        ttl: 1
+        type: A
+      loop: "{{ instances }}"
+      when: action == "delete"
+    - name: Delete EC2 Instances
+      amazon.aws.ec2_instance:
+        state: absent
+        name: "roboshop-{{ item.name }}"
+        region: "{{ aws_region }}"
+      loop: "{{ instances }}" 
+      when: action == "delete"
+
+    - name: Delete Instance Specific Security Groups
+      amazon.aws.ec2_security_group:
+        name: "roboshop-{{ item.name }}"
+        region: "{{ aws_region }}"
+        state: absent
+      loop: "{{ instances }}"
+      when: action == "delete"  
+    
+    - name: Delete Common Security Group
+      amazon.aws.ec2_security_group:
+        name: roboshop_common
+        region: "{{ aws_region }}"
+        state: absent
+      when: action == "delete"
+

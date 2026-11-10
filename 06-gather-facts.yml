@@ -1,0 +1,21 @@
+---
+- name: Gather facts example
+  hosts: local
+  connection: local
+  #gather_facts: true
+
+  tasks:
+  #  - name: Show ansible facts
+  #    debug:
+  #      msg: "{{ ansible_facts }}"
+
+    - name: Show system information
+      debug:
+        msg: |
+          System: {{ ansible_facts['system'] }}
+          OS Family: {{ ansible_facts['os_family'] }}
+          Distribution: {{ ansible_facts['distribution'] }}
+          Distribution Version: {{ ansible_facts['distribution_version'] }}
+          Distribution Release: {{ ansible_facts['distribution_release'] }}
+          Architecture: {{ ansible_facts['architecture'] }}
+          IP Address: {{ ansible_facts['default_ipv4']['address'] }}

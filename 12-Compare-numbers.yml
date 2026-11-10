@@ -1,0 +1,30 @@
+---
+- name: Compare Two numbers
+  hosts: local
+  connection: local
+  
+
+  vars_prompt:
+    - name: "nbr1"
+      prompt: Enter First Number
+      private: no
+
+    - name: "nbr2"
+      prompt: Enter Second Number
+      private: no
+
+  tasks:
+    - name: Compare Two Numbers
+      debug:
+        msg: "The First Number {{ nbr1 }} is grater Than Second Number {{ nbr2 }}"
+      when: nbr1 | int > nbr2 | int
+
+    - name: Compare Two Numbers
+      debug:
+        msg: "Both the numbers {{ nbr1 }} and {{ nbr2 }} are Equal"
+      when: nbr1 | int == nbr2 | int
+
+    - name: Compare Two Numbers
+      debug:
+        msg: "The Second Number {{ nbr2 }} is Grater Than First Number {{ nbr1 }} "
+      when: nbr1 | int < nbr2 | int

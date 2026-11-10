@@ -1,0 +1,20 @@
+---
+- name: Even or Odd number check
+  hosts: local
+  connection: local
+
+  vars_prompt:
+    - name: "given_number"
+      prompt: "Please enter a number to check if it is even or odd"
+      private: no
+
+  tasks:
+    - name: Check if the given number is even
+      debug:
+        msg: "The Given Number {{ given_number }} : Even Number"
+      when: given_number | int % 2 == 0
+
+    - name: Check if the given number is odd
+      debug:
+        msg: "The Given Number {{ given_number }} : Odd Number"
+      when: given_number | int % 2 != 0

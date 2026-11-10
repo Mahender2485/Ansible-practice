@@ -1,0 +1,20 @@
+---
+- name: Age Validity Check
+  hosts: local
+  connection: local
+
+  vars_prompt:
+    - name: "age"
+      prompt: Please enter your age
+      private: no
+
+  tasks:
+    - name: Check If Eligible for Voting
+      debug:
+        msg: "The entered age {{ age }} is Eligible for Voting"
+      when: age | int >= 18
+
+    - name: Check If Not Eligible for Voting
+      debug:
+        msg: "The entered age {{ age }} is Not Eligible for Voting"
+      when: age | int < 18

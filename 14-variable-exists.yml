@@ -1,0 +1,22 @@
+---
+- name: Check if the given variable exists or not
+  hosts: local
+  connection: local
+
+  vars_prompt:
+    - name: my_variable
+      prompt: "Please enter a value for my_variable (leave blank to test non-existence):"
+      private: no
+  
+  tasks:
+    - name: Variable Exists
+      debug:
+        msg: "The variable {{ my_variable }} exists."
+
+      when:  my_variable  is defined and my_variable | trim | length > 0
+
+    - name: Variable Does Not Exist
+      debug:
+        msg: "The variable {{ my_variable }} does not exist."
+
+      when: my_variable is not defined or my_variable | default('') | trim | length == 0

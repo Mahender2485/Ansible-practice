@@ -1,0 +1,25 @@
+---
+- name: Multiplication Table
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_prompt:
+    - name: nbr
+      prompt: "Enter a number"
+      private: false
+
+  tasks:
+    - name: Initialize table results
+      ansible.builtin.set_fact:
+        table_results: []
+
+    - name: Multiplication table for {{ nbr }}
+      ansible.builtin.set_fact:
+        table_results: "{{ table_results + [nbr ~ ' x ' ~ item ~ ' = ' ~ ((nbr | int) * item)] }}"
+      loop: "{{ range(1, 13) | list }}"
+      no_log: true
+
+    - name: Display multiplication table
+      ansible.builtin.debug:
+        msg: "{{ table_results | join('\n') }}"

@@ -1,0 +1,20 @@
+- name: Remove Nginx package
+  hosts: local
+  connection: local
+  become: true
+  tasks:
+
+  - name: Uninstall all nginx packages
+    ansible.builtin.apt:
+      name:
+        - nginx
+        - nginx-core
+        - nginx-common
+        - libnginx-mod-http-geoip2
+        - libnginx-mod-http-xslt-filter
+        - libnginx-mod-mail
+        - libnginx-mod-stream
+        - libnginx-mod-stream-geoip2
+      state: absent
+      purge: true
+      autoremove: true

@@ -1,0 +1,17 @@
+---
+- name: Conditions testing
+  hosts: local
+  connection: local
+  vars:
+    given_number: 10
+
+  tasks:
+    - name: Given number is even
+      debug:
+        msg: "The Given Number {{ given_number }} : Even Number"
+      when: given_number % 2 == 0
+
+    - name: Given number is odd
+      debug:
+        msg: "The Given Number {{ given_number }} : Odd Number"
+      when: given_number % 2 != 0

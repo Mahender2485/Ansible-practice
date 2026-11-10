@@ -1,0 +1,21 @@
+- name: Sample ansible to ping
+  hosts: local
+  connection: local
+  gather_facts: true
+
+  tasks:
+  - name: Ping local hosts
+    ping:
+
+  - name: To get the hostname
+    ansible.builtin.command: hostname
+    register: hostname_output
+    changed_when: false
+
+  - name: To print the hostname
+    ansible.builtin.debug:
+      msg: "Hostname is {{ hostname_output.stdout }}"
+
+  - name: To Print the IP address
+    ansible.builtin.debug:
+      msg: "IP address is {{ ansible_facts ['default_ipv4']['address'] }}"

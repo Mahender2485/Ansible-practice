@@ -1,0 +1,26 @@
+---
+- name: Test variable precedence
+  hosts: local
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars.yml
+
+  vars:
+    pkg: nginx
+
+  tasks:
+    - name: Test vars file
+      ansible.builtin.debug:
+        msg: "Package is {{ pkg }}"
+
+    - name: Test task level variable
+      ansible.builtin.debug:
+        msg: "Package is {{ pkg }}"
+      vars:
+        pkg: telnet
+
+    - name: Test variable after task level
+      ansible.builtin.debug:
+        msg: "Package is {{ pkg }}"

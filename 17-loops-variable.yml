@@ -1,0 +1,14 @@
+---
+- name: Pinr Numbers through loop
+  hosts: local
+  connection: local
+
+  vars_prompt:
+    - name: nbr
+      prompt: "Please enter a number to print"
+      private: false
+  tasks:
+    - name: Print numbers from 1 to the given number
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ range(1, nbr | int + 1) | list }}"

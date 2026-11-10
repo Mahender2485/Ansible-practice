@@ -1,0 +1,14 @@
+---
+- name: Loops Example
+  hosts: local
+  connection: local
+
+  tasks: 
+    - name: Loop through list
+      debug:
+        msg: "{{ item}}"
+      loop:
+        - RHEL
+        - CentOS
+        - Ubuntu
+        - Rokey

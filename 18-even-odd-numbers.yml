@@ -1,0 +1,22 @@
+---
+- name: Print even numbers from 1 to given number
+  hosts: local
+  connection: local
+
+  vars_prompt:
+    - name: nbr
+      prompt: Enter range to print even numbers
+      private: false
+
+  tasks:
+    - name: Even numbers from 1 to {{ nbr }}
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ range(1, nbr | int + 1) |list }}"
+      when: item % 2 == 0
+
+    - name: Odd numbers from 1 to {{ nbr }}
+      debug:
+         msg: "{{ item }}"
+      loop: "{{ range(1, nbr | int + 1) |list }}"
+      when: item % 2 != 0

@@ -1,0 +1,28 @@
+---
+- name: To print data types in ansible
+  hosts: local
+  connection: local
+
+  vars:
+    Name: "Ansible"
+    Age: 5
+    Is_Ansible: true
+    Skills: #List
+      - Automation
+      - Configuration Management
+      - Orchestration
+    gpa: 3.8
+    marks: #Dictionary
+      Math: 90
+      Science: 85
+      English: 95
+  tasks:
+    - name: Print string variable
+      debug:
+        msg: |
+          Name_type: "{{ Name }} : {{ Name | type_debug }}"
+          Age_type: "{{ Age }} : {{ Age | type_debug }}"
+          Is_Ansible_type: "{{ Is_Ansible }} : {{ Is_Ansible | type_debug }}"
+          Skills_type: "{{ Skills }} : {{ Skills | type_debug }}"
+          gpa_type: "{{ gpa }} : {{ gpa | type_debug }}"
+          marks_type: "{{ marks }} : {{ marks | type_debug }}"

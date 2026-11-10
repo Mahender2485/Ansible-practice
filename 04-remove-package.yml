@@ -1,0 +1,21 @@
+- name: Uninstall package taking argument from command line
+  hosts: local
+  connection: local
+  become: true
+
+  vars_prompt:
+    - name: pkg
+      prompt: "Enter package name to Uninstall"
+      private: false # If not specified , the default is true, which means the input will be hidden.
+
+  tasks:
+    - name: To uninstall {{ pkg }}
+      package:
+        name: "{{ pkg }}"
+        state: absent
+        purge: true
+        autoremove: true
+
+    - name: Print message
+      debug:
+        msg: Package {{ pkg }} removed successfully

@@ -1,0 +1,25 @@
+---
+- name: Number is Positive or Negative
+  hosts: local
+  connection: local
+
+  vars_prompt:
+  - name: "given_number"
+    prompt: "Please enter number to check"
+    private: no
+
+  tasks:
+  - name: Positive Number
+    debug:
+      msg: "The given number {{ given_number }} is Positive"
+    when: given_number | int > 0
+
+  - name: Zero or Invalid Number
+    debug:
+      msg: "The given number {{ given_number }} is Zero or Invalid"
+    when: given_number | int == 0
+
+  - name: Negative Number
+    debug:
+      msg: "The given number {{ given_number }} is Negative"
+    when: given_number | int < 0

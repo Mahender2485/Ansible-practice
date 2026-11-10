@@ -1,0 +1,15 @@
+---
+- name: Print Multiplication Table
+  hosts: local
+  connection: local
+
+  vars_prompt:
+    - name: nbr
+      prompt: "Please enter number to print multiplication table:"
+      private: false
+
+  tasks:
+    - name: multiplication table for {{ nbr }}
+      debug:
+        msg: "{{ nbr }} x {{ item }} = {{ nbr | int * item }}"
+      loop: "{{ range(1, 13) | map ('int') | list }}"

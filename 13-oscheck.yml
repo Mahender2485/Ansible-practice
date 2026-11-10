@@ -1,0 +1,13 @@
+---
+- name: Check Operating System
+  hosts: local
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Compare Operating System
+      debug:
+
+        msg: "Given system is {{ ansible_facts['distribution'] }} machine"
+      when: ansible_facts['distribution'] == "Ubuntu"
+

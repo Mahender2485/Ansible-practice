@@ -1,0 +1,84 @@
+
+---
+- name: Create EC2 instance
+  hosts: local
+  connection: local
+  gather_facts: false
+
+  vars:
+    aws_region: us-east-1
+    ami_id: ami-0055977a6e828a4f4
+
+  vars_prompt:
+    - name: instance_name
+      prompt: "Enter Instance Name to create"
+      private: false
+
+  tasks:
+    - name: Create Common Security Group
+      amazon.aws.ec2_security_group:
+        name: roboshop_common
+        description: "Common SG for RoboShop"
+        region: "{{ aws_region }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+        state: present
+      register: common_sg
+
+    - name: Create Instance Specific SG
+      amazon.aws.ec2_security_group:
+        name: "roboshop-{{ instance_name }}"
+        description: "SG for {{ instance_name }}"
+        region: "{{ aws_region }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 27017
+            cidr_ip: 0.0.0.0/0
+        state: present
+      register: instance_sg
+
+    - name: Create EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "roboshop-{{ instance_name }}"
+        state: running
+        instance_type: t3.micro
+        image_id: "{{ ami_id }}"
+        region: "{{ aws_region }}"
+        security_groups:
+          - "{{common_sg.group_id}}"
+          - "{{instance_sg.group_id}}"
+        wait: true
+      register: ec2_output
+
+    - name: Print EC2 Details
+      ansible.builtin.debug:
+        msg:
+          - "Instance ID: {{ ec2_output.instances[0].instance_id }}"
+          - "Private IP: {{ ec2_output.instances[0].private_ip_address }}"
+          - "Common SG: {{ common_sg.group_id }}"
+          - "Instance SG: {{ instance_sg.group_id }}"
+
+    - name: Delete ec2 instance
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ ec2_output.instances[0].instance_id }}"
+        state: absent
+        region: "{{ aws_region }}"
+      when: ec2_output is defined
+
+    - name: Delete Common Security Group
+      amazon.aws.ec2_security_group:
+        name: roboshop_common
+        region: "{{ aws_region }}"
+        state: absent
+      when: common_sg is defined
+
+    - name: Delete Instance Specific Security Group
+      amazon.aws.ec2_security_group:
+        name: "roboshop-{{ instance_name }}"
+        region: "{{ aws_region }}"
+        state: absent
+      when: instance_sg is defined
