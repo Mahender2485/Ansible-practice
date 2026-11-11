@@ -55,7 +55,7 @@
 
     - name: Copy the user service
       copy:
-        src: /root/Ansible-Practice/roboshop-project/files/user-service.j2
+        src: ~/Ansible-Practice/roboshop-project/files/user-service.j2
         dest: /etc/systemd/system/user.service
 
     - name: daemon reload and start the service

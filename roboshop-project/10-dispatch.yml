@@ -49,7 +49,7 @@
 
     - name: Dispatch Service file
       file:
-        src: /root/Ansible-Practice/roboshop-project/files/dispatch-service.j2
+        src: ~/Ansible-Practice/roboshop-project/files/dispatch-service.j2
         dest: /etc/systemd/system/dispatch.service
 
     - name: Reload and start the deamon

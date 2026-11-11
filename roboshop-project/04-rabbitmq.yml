@@ -6,7 +6,7 @@
 
     - name: Copy the repo file
       copy:
-        src: /root/Ansible-Practice/roboshop-project/files/rabbitmq.repo
+        src: ~/Ansible-Practice/roboshop-project/files/rabbitmq.repo
         dest: /etc/yum.repos.d/rabbitmq.repo
 
     - name: Install erlang and rabbitmq-server

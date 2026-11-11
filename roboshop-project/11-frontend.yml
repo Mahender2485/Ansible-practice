@@ -47,7 +47,7 @@
 
   - name: copy roboshop config
     template:
-      src: /root/Ansible-Practice/roboshop-project/files/roboshop-conf.j2
+      src: ~/Ansible-Practice/roboshop-project/files/roboshop-conf.j2
       dest: /etc/nginx/default.d/roboshop.conf
    
   - name: restart frontend
