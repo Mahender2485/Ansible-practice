@@ -1,5 +1,5 @@
 ---
-- nanme: Install Go and configure
+- name: Install Go and configure
   hosts: dispatch
   become: true
   task:
