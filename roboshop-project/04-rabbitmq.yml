@@ -1,0 +1,33 @@
+---
+- name: Install and start rabbitmq
+  hosts: rabbitmq
+  become: true
+  tasks:
+
+    - name: Copy the repo file
+      copy:
+        src: /root/Ansible-Practice/roboshop-project/files/rabbitmq.repo
+        dest: /etc/yum.repos.d/rabbitmq.repo
+
+    - name: Install erlang and rabbitmq-server
+      package:
+        name:
+          - erlang
+          - rabbitmq-server
+        state: present
+
+    - name: start and enable the RabbitMQ service
+      service:
+        name: rabbitmq-server
+        state: started
+        enabled: true
+    
+    - name: Create a user for the application
+      community.rabbitmq.rabbitmq_user:
+        user: "{{ rabbitmq_user }}"
+        password: "{{ rabbitmq_user_password }}"
+        vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+        state: present
