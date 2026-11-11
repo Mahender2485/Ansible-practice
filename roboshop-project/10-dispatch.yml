@@ -48,7 +48,7 @@
         chdir: /app
 
     - name: Dispatch Service file
-      file:
+      template:
         src: ~/Ansible-practice/roboshop-project/files/dispatch-service.j2
         dest: /etc/systemd/system/dispatch.service
 
