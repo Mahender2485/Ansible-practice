@@ -47,4 +47,16 @@
         cmd: go build -o dispatch
         chdir: /app
 
+    - name: Dispatch Service file
+      file:
+        src: /root/Ansible-Practice/roboshop-project/files/dispatch-service.j2
+        dest: /etc/systemd/system/dispatch.service
+
+    - name: Reload and start the deamon
+      systemd_service:
+        name: dispatch
+        daemon_reload: true
+        state: restarted
+        enabled: yes
+
 
