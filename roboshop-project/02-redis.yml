@@ -20,6 +20,7 @@
 
   - name: Disable protected mode
     lineinfile:
+      path: /etc/redis/redis.conf
       regexp: "^#?protected-mode yes"
       line: "protected-mode no"
 
