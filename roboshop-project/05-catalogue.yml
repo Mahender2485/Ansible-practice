@@ -74,7 +74,7 @@
       register: product_count
 
     - name: Load the data if already not loaded
-      command: mongosh --host {{ mongodb_host }} </app/db/master-data.js
+      command: mongosh --host "{{ mongodb_host }}" < /app/db/master-data.js
       when: product_count.stdout | int == 0
 
     - name: Reload the daemon
