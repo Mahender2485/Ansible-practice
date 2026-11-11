@@ -59,7 +59,7 @@
         dest: /etc/systemd/system/user.service
 
     - name: daemon reload and start the service
-      systemcd_service:
+      systemd_service:
         name: user
         state: started
         enabled: true
