@@ -55,12 +55,12 @@
 
     - name: Create catalogue service
       template:
-        src: ~/Ansible-Practice/roboshop-project/files/catalogue-service.j2
+        src: ~/Ansible-practice/roboshop-project/files/catalogue-service.j2
         dest: /etc/systemd/system/catalogue.service
 
     - name: Copy Mongo Client repos
       copy:
-        src: ~/Ansible-Practice/roboshop-project/files/mongo-client.repo
+        src: ~/Ansible-practice/roboshop-project/files/mongo-client.repo
         dest: /etc/yum.repos.d/mongo.repo
 
     - name: Install mongo client on catalogue

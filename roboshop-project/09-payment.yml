@@ -56,7 +56,7 @@
 
   - name: copy payment service
     template:
-      src: ~/Ansible-Practice/roboshop-project/files/payment-service.j2
+      src: ~/Ansible-practice/roboshop-project/files/payment-service.j2
       dest: /etc/systemd/system/payment.service
 
   - name: daemon reload
