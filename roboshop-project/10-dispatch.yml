@@ -38,7 +38,7 @@
 
     - name: Unzip the downloaded file
       unarchive:
-        src: /tmp/user.zip
+        src: /tmp/dispatch-v4.zip
         dest: /app
         remote_src: yes
 
