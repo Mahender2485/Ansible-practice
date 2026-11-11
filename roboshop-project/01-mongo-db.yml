@@ -17,8 +17,8 @@
     - name: Update Configuration file to allow other server connections
       replace:
         path: /etc/mongod.conf
-        regexp: '^bindIp: 127.0.0.1'
-        replace: 'bindIp: 0.0.0.0'
+        regexp: '127.0.0.1'
+        replace: '0.0.0.0'
 
     - name: Start the mongo apiVersion
       service:
