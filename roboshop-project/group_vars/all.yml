@@ -15,3 +15,4 @@ payment_host: payment.mahender.org
 dispatch_host: dispatch.mahender.org
 frontend_host: frontend.mahender.org
 rabbitmq_host: rabbitmq.mahender.org
+user_host: user.mahender.org
