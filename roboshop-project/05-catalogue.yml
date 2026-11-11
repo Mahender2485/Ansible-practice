@@ -1,0 +1,86 @@
+---
+- name: To Configure and Install catalogue
+  hosts: catalogue
+  become: true
+  tasks:
+
+    - name: disable default nodesjs
+      command: dnf module disable nodejs -y
+
+    - name: Enable nodejs 24
+      command: dnf module enable nodejs:24 -y
+
+    - name: Install nodejs 24
+      package:
+        name: nodejs
+        state: present
+
+    - name: Create roboshop user for application
+      user:
+        name: roboshop
+        system: true
+        shell: /sbin/nologin
+        create_home: false
+        home: /app
+        comment: "roboshop system user"
+        state: present
+
+    - name: Remove existing app dir and file
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /app
+        - /tmp/catalogue.zip
+
+    - name: Create directory for application
+      file:
+        path: /app
+        state: directory
+
+    - name: Download the application file
+      get_url:
+        url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip
+        dest: /tmp/catalogue.zip
+
+    - name: unzip the application file
+      unarchive:
+        src: /tmp/catalogue.zip
+        dest: /app
+        remote_src: true
+    
+    - name: Install dependencies
+      community.general.npm:
+        path: /app
+
+    - name: Create catalogue service
+      template:
+        src: /root/Ansible-Practice/roboshop-project/files/catalogue-service.j2
+        dest: /etc/systemd/system/catalogue.service
+
+    - name: Copy Mongo Client repos
+      copy:
+        src: /root/Ansible-Practice/roboshop-project/files/mongo-client.repo
+        dest: /etc/yum.repos.d/mongo.repo
+
+    - name: Install mongo client on catalogue
+      package:
+        name: mongodb-mongosh
+        state: present
+
+    - name: Check if the data is already loaded
+      command: mongosh --host {{ mongodb_host }} --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()'
+      register: product_count
+
+    - name: Load the data if already not loaded
+      command: mongosh --host {{ mongodb_host }} </app/db/master-data.js
+      when: product_count.stdout | int == 0
+
+    - name: Reload the daemon
+      systemd_service:
+        name: catalogue
+        daemon_reload: true
+        state: started
+        enabled: true
+
+    

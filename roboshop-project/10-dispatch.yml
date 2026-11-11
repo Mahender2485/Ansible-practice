@@ -1,0 +1,50 @@
+---
+- nanme: Install Go and configure
+  hosts: dispatch
+  become: true
+  task:
+    - name: Install golang
+      package:
+        name: golang
+        state: present
+
+    - name: Create Application User
+      user:
+        name: roboshop
+        system: true
+        shell: /sbin/nologin
+        create_home: false
+        home: /app
+        comment: "roboshop system user"
+        state: present
+
+    - name: Remove the files if exist
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /app
+        - /tmp/dispatch.zip
+
+    - name: Create App dir
+      file:
+        path: /app
+        state: directory
+
+    - name: Download and unzip application
+      get_url:
+        url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/dispatch-v4.zip
+        dest: /tmp/dispatch.zip
+
+    - name: Unzip the downloaded file
+      unarchive:
+        src: /tmp/user.zip
+        dest: /app
+        remote_src: yes
+
+    - name: Build Dispatch application
+      ansible.builtin.command:
+        cmd: go build -o dispatch
+        chdir: /app
+
+

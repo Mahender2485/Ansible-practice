@@ -3,3 +3,15 @@ ansible_password: DevOps321
 mysql_root_password: RoboShop@1
 rabbitmq_user: roboshop
 rabbitmq_user_password: roboshop123
+mongodb_host: mongodb.mahender.org
+redis_host: redis.mahender.org
+catalogue_host: catalogue.mahender.org
+shipping_db_user: shipping
+shipping_db_password: RoboShop@1
+mysql_host: mysql.mahender.org
+cart_host: cart.mahender.org
+shipping_host: shipping.mahender.org
+payment_host: payment.mahender.org
+dispatch_host: dispatch.mahender.org
+frontend_host: frontend.mahender.org
+rabbitmq_host: rabbitmq.mahender.org
