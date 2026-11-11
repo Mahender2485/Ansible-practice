@@ -6,7 +6,7 @@
   tasks:
     - name: Copy mongodb.repo file
       copy:
-        src: /root/Ansible-practice/roboshop-project/files/mongodb.repo
+        src: /Ansible-practice/roboshop-project/files/mongodb.repo
         dest: /etc/yum.repos.d/mongodb.repo
 
     - name: Install Mongodb
