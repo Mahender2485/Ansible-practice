@@ -1,8 +1,8 @@
 ---
-- name: Install Go and configure
+- name: Configure Dispatch
   hosts: dispatch
-  become: true
-  task:
+  become: yes
+  tasks:
     - name: Install golang
       package:
         name: golang
