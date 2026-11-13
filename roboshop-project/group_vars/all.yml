@@ -1,8 +1,8 @@
 ansible_user: ec2-user
-ansible_password: DevOps321
-mysql_root_password: RoboShop@1
+ansible_password: xxxxxxx
+mysql_root_password: xxxxxxxxx
 rabbitmq_user: roboshop
-rabbitmq_user_password: roboshop123
+rabbitmq_user_password: xxxxxxxxx
 mongodb_host: mongodb.mahender.org
 redis_host: redis.mahender.org
 catalogue_host: catalogue.mahender.org
